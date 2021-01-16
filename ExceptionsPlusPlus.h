@@ -1,13 +1,13 @@
 /*
 *	===============================================================================
 *	ExceptionsPlusPlus:
-*	Easy advanced exception handling in a single templated C++ header file
+*	Easy advanced exception handling in a single templated C++ header file 
 *	More info on GitHub https://github.com/Ohjurot/ExceptionsPlusPlus
 *	===============================================================================
-*
-*	This library is license under the following two licenses: "MIT License" and
-*	"The Unlicense" You can choose the license witch better fits your work!
-*
+* 
+*	This library is license under the following two licenses: "MIT License" and 
+*	"The Unlicense" You can choose the license witch better fits your work! 
+* 
 *	===============================================================================
 *	License A: MIT License (prefered)
 *	===============================================================================
@@ -32,7 +32,7 @@
 *	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 *	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 *	SOFTWARE.
-*
+* 
 *	===============================================================================
 *	License B: The Unlicense
 *	===============================================================================
@@ -127,8 +127,6 @@
 /// </summary>
 namespace EXPP {
 	// Forward declare
-	template<typename T>
-	class EmptyWrapper;
 	template<typename T, typename ST>
 	class Exception;
 	template<typename T>
@@ -139,19 +137,6 @@ namespace EXPP {
 	class InvocationResult;
 
 	/// <summary>
-	/// Class for creating a null object of T
-	/// </summary>
-	/// <typeparam name="T">Type to create</typeparam>
-	template<typename T>
-	class EmptyWrapper {
-		public:
-			/// <summary>
-			/// Public member
-			/// </summary>
-			T member;
-	};
-
-	/// <summary>
 	/// Basic exception
 	/// </summary>
 	/// <typeparam name="T">String type char or wchar_t</typeparam>
@@ -159,7 +144,7 @@ namespace EXPP {
 	class BaseException {
 		// Static assert string stype
 		static_assert(std::is_same_v<std::decay_t<T>, char> || std::is_same_v<std::decay_t<T>, wchar_t>, "IBaseException can only hold string types");
-
+	
 		public:
 			/// <summary>
 			/// Create base exception
@@ -198,13 +183,13 @@ namespace EXPP {
 				// Convert to wchar
 #if !defined(EXPP_OMMIT_SOURCE) && !defined(EXPP_NO_STR_CONVERT)
 #if defined(_WIN32)
-					// Compute new string length
+				// Compute new string length
 				int wstrLength = MultiByteToWideChar(CP_UTF8, 0, filename, -1, nullptr, 0);
 				// Allocate string
 				m_filename = EXPP_MEMORY_ALLOC(wchar_t*, sizeof(wchar_t) * wstrLength);
 				// Convert
 				MultiByteToWideChar(CP_UTF8, 0, filename, -1, m_filename, wstrLength);
-				// ADD YOUR OS CHAR -> WCHAR CONVERSION HERE '#elif defined(YOUR_OS_DEFINE_MACRO)' Please considere a pull request with your OS inclusion
+// ADD YOUR OS CHAR -> WCHAR CONVERSION HERE '#elif defined(YOUR_OS_DEFINE_MACRO)' Please considere a pull request with your OS inclusion
 #endif
 #endif
 			}
@@ -246,7 +231,7 @@ namespace EXPP {
 			/// Retrive file
 			/// </summary>
 			/// <returns>File</returns>
-			const T* file() {
+			const T* file(){
 				return m_filename;
 			}
 
@@ -267,7 +252,7 @@ namespace EXPP {
 			/// Copy function
 			/// </summary>
 			/// <param name="target">Ref to copy target</param>
-			virtual void cpy(BaseException<T>& target) {
+			virtual void cpy(BaseException<T>& target) { 
 				// Memory will be freed by new owner of pointer this will go out of scope soon
 				m_converted = false;
 			}
@@ -360,10 +345,10 @@ namespace EXPP {
 			/// <param name="target">Ref to copy target</param>
 			virtual void cpy(BaseException<ST>& target) {
 				// Cast to pointer
-				Exception<T, ST>* ptrTarget = (Exception<T, ST>*) & target;
+				Exception<T, ST>* ptrTarget = (Exception<T, ST>*)&target;
 				// Create Empty data
-				EmptyWrapper<T> wrp;
-				std::memcpy(&ptrTarget->m_value, &wrp.member, sizeof(T));
+				T eo = T();
+				std::memcpy(&ptrTarget->m_value, &eo, sizeof(T));
 				// Copy data
 				ptrTarget->m_value = m_value;
 				// Call super
@@ -627,7 +612,7 @@ namespace EXPP {
 			/// Check if got handled
 			/// </summary>
 			/// <returns>true if no exception is present or exception was handled</returns>
-			bool handled() {
+			bool handled(){
 				// Return true on succeed or handled
 				return m_succeed || m_handled;
 			}
