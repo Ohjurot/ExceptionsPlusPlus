@@ -13,7 +13,7 @@
 *	===============================================================================
 *	MIT License
 *
-*	Copyright (c) 2021 Ludwig Füchsl
+*	Copyright (c) 2021 Ludwig Fï¿½chsl
 *
 *	Permission is hereby granted, free of charge, to any person obtaining a copy
 *	of this software and associated documentation files (the "Software"), to deal
@@ -76,6 +76,7 @@
 #include <string>
 #include <typeinfo>
 #include <memory>
+#include <cstring>
 
 // Memory
 #define EXPP_MEMORY_ALLOC(type, bytes) ((type)std::malloc(bytes))
@@ -154,7 +155,7 @@ namespace EXPP {
 			/// <param name="type">Type of the exception</param>
 			/// <param name="what">Exeption what</param>
 			/// <param name="size">Size of exeption for copy</param>
-			template<typename = std::enable_if_t<std::is_same_v<std::decay_t<T>, char>>>
+			template<typename CT = char, typename = std::enable_if_t<std::is_same_v<std::decay_t<T>, CT>>>
 			BaseException(int line, const char* filename, size_t type, const char* what, size_t size = sizeof(BaseException<T>)) :
 				m_line(EXPP_NOMMIT_F(line, -1)),
 				m_filename((T*)EXPP_NOMMIT_F(filename, "ommited")),
@@ -171,7 +172,7 @@ namespace EXPP {
 			/// <param name="filename">Filename of the exception</param>
 			/// <param name="type">Type of the exception</param>
 			/// <param name="what">Exeption what</param>
-			template<typename = std::enable_if_t<std::is_same_v<std::decay_t<T>, wchar_t>>>
+			template<typename CT = wchar_t, typename = std::enable_if_t<std::is_same_v<std::decay_t<T>, CT>>>
 			BaseException(int line, const char* filename, size_t type, const wchar_t* what, size_t size = sizeof(BaseException<T>)) :
 				m_line(EXPP_NOMMIT_F(line, -1)),
 				m_filename((T*)EXPP_NOMMIT_F(filename, L"ommited")),
@@ -245,7 +246,7 @@ namespace EXPP {
 
 		protected:
 			// Friend
-			template<typename T, typename ST>
+			template<typename FT, typename ST>
 			friend class InvocationResult;
 
 			/// <summary>
@@ -518,7 +519,7 @@ namespace EXPP {
 				}
 
 				// Check if type match
-				if (this->testExceptionType<ET>()) {
+				if (this->template testExceptionType<ET>()) {
 					// Handled and return true
 					m_handled = true;
 					return true;
@@ -543,7 +544,7 @@ namespace EXPP {
 				}
 
 				// Check if type match
-				if (this->testExceptionType<ET>() && *this->getExceptionType<ET>() == (ET)value) {
+				if (this->template testExceptionType<ET>() && *(this->template getExceptionType<ET>()) == (ET)value) {
 					// Handled and return true
 					m_handled = true;
 					return true;
@@ -570,7 +571,7 @@ namespace EXPP {
 				}
 
 				// Check if type match
-				if (this->testExceptionType<ET>() && functionPointer(args..., this->getExceptionType<ET>())) {
+				if (this->template testExceptionType<ET>() && functionPointer(args..., this->template getExceptionType<ET>())) {
 					// Handled and return true
 					m_handled = true;
 					return true;
@@ -598,7 +599,7 @@ namespace EXPP {
 				}
 
 				// Check if type match
-				if (this->testExceptionType<ET>() && functionPointer(args...)) {
+				if (this->template testExceptionType<ET>() && functionPointer(args...)) {
 					// Handled and return true
 					m_handled = true;
 					return true;

@@ -1,3 +1,4 @@
+#define EXPP_FORCE_STRING_TYPE_ASCII
 #include "ExceptionsPlusPlus.h"
 
 int main(int argc, char** argv) {
